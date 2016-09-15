@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script>
+		var app = angular.module('app', []);
+
+		app.controller('MainCtrl', function($http){
+			var vm = this;
+			vm.data = false;
+			vm.fetchData = function(user){
+				vm.loading = true;
+				$http.get('https://api.github.com/users/' + user.name + '/repos').then(function (res) {
+					vm.data = true;
+					vm.repo = res.data;
+					vm.loading = false;
+				})
+			}
+		})
+    </script>
+    <style>
+        html {
+            font-family: Arial;
+            width: 90%;
+            margin: 0 auto;
+            overflow-wrap: break-word;
+        }
+        .format-data {
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body ng-controller="MainCtrl as vm">
+    <label for="enter">Enter Username</label>
+    <input type="text" ng-model="user.name" name="enter">
+    <button ng-click="vm.fetchData(user)">click here</button>
+    <br />
+    <h4 ng-if="vm.loading === true">retrieving information...</h4>
+    <h3 ng-hide="vm.data === false"  class="format-data">
+
+        {{vm.repo}} <br />
+
+    </h3>
+</body>
+</html>
